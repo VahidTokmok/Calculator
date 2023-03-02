@@ -3,15 +3,20 @@ package com.example.calculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
+
 public class MainActivity extends AppCompatActivity {
+
 
     private Double first, second, summ;
     private TextView screen;
+    private MaterialButton go_button;
     private Boolean isOperationClick;
     private String operation;
 
@@ -22,20 +27,40 @@ public class MainActivity extends AppCompatActivity {
             screen.append(number);
         }
     }
+    private void  buttonVisibility(Boolean isEqualClick){
+        if (isEqualClick){
+            go_button.setVisibility(View.VISIBLE);
+        }else {
+            go_button.setVisibility(View.INVISIBLE);
+        }
+    }
+    public void operationChoiсe(String choiсeOperation){
+        buttonVisibility(false);
+        first = Double.valueOf(screen.getText().toString());
+        operation = choiсeOperation;
+    }
 
     public void screenClear(){
         screen.setText("0");
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         screen = findViewById(R.id.tv_screen);
+        go_button = findViewById(R.id.bt_go);
+
+        go_button.setOnClickListener(v -> {
+//            Intent intent = new Intent(MainActivity.this, ScrollingActivity.class);
+//            startActivity(intent);
+        });
     }
 
     @SuppressLint("NonConstantResourceId")
     public void onNumberClick(View view) {
+
         switch (view.getId()) {
             case R.id.bt_one:
                 filling("1");
@@ -71,76 +96,70 @@ public class MainActivity extends AppCompatActivity {
                 filling(".");
                 break;
         }
+        buttonVisibility(false);
         isOperationClick = false;
     }
 
-    @SuppressLint("NonConstantResourceId")
+    @SuppressLint({"NonConstantResourceId",})
     public void onOperationClick(View view) {
-
         switch (view.getId()) {
             case R.id.bt_plus:
-                first = Double.valueOf(screen.getText().toString());
-                isOperationClick = true;
-                operation = "+";
+                operationChoiсe("+");
                 break;
             case R.id.bt_minus:
-                first = Double.valueOf(screen.getText().toString());
-                isOperationClick = true;
-                operation = "-";
+                operationChoiсe("-");
                 break;
             case R.id.bt_multiplication:
-                first = Double.valueOf(screen.getText().toString());
-                isOperationClick = true;
-                operation = "*";
+                operationChoiсe("*");
                 break;
             case R.id.bt_division:
-                first = Double.valueOf(screen.getText().toString());
-                isOperationClick = true;
-                operation = "/";
+                operationChoiсe("/");
                 break;
-                case R.id.percent:
-                first = Double.valueOf(screen.getText().toString());
-                isOperationClick = true;
-                operation = "%";
+            case R.id.percent:
+                operationChoiсe("%");
                 break;
             case R.id.plus_minus:
-                first = Double.valueOf(screen.getText().toString());
-                isOperationClick = true;
-                operation = "+/-";
+                operationChoiсe("+/-");
                 break;
             case R.id.bt_clear:
+                buttonVisibility(false);
                 screenClear();
                 break;
             case R.id.bt_equals:
-                if (isOperationClick){
-                    second = Double.valueOf(screen.getText().toString());
-                    switch (operation){
-                        case "+":
-                            summ = first + second;
-                            break;
-                        case "-":
-                            summ = first - second;
-                            break;
-                        case "*":
-                            summ = first * second;
-                            break;
-                        case "/":
-                            summ = first / second;
-                            break;
-                        case "%":
-                            summ = second / 100 * first;
-                            break;
-                        case "-/+":
-                            screen.setText("-" + String.valueOf(screen));
-                            break;
-                        default:
-                            summ = 0.0;
-                            break;
-                    }
-                    screen.setText(String.valueOf(summ));
-                }
-
+                summa();
         }
     isOperationClick = true;
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void summa(){
+        buttonVisibility(true);
+        if (isOperationClick){
+            second = Double.valueOf(screen.getText().toString());
+            switch (operation){
+                case "+":
+                    summ = first + second;
+                    break;
+                case "-":
+                    summ = first - second;
+                    break;
+                case "*":
+                    summ = first * second;
+                    break;
+                case "/":
+                    summ = first / second;
+                    break;
+                case "%":
+                    summ = second / 100 * first;
+                    break;
+                case "-/+":
+                    screen.setText("-"+ screen);
+                    break;
+                default:
+                    summ = 0.0;
+                    break;
+            }
+            screen.setText(String.valueOf(summ));
+        }
     }
 }
