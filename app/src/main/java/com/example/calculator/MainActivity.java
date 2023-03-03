@@ -52,11 +52,10 @@ public class MainActivity extends AppCompatActivity {
         screen = findViewById(R.id.tv_screen);
         go_button = findViewById(R.id.bt_go);
 
-        go_button.setOnClickListener(v -> {
-//            Intent intent = new Intent(MainActivity.this, ScrollingActivity.class);
-//            startActivity(intent);
-        });
+
     }
+
+
 
     @SuppressLint("NonConstantResourceId")
     public void onNumberClick(View view) {
@@ -160,6 +159,15 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
             screen.setText(String.valueOf(summ));
+            go();
         }
+    }
+    public void go() {
+        go_button.setOnClickListener(v -> {
+            String res = screen.getText().toString();
+            Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+            intent.putExtra("key", res);
+            startActivity(intent);
+        });
     }
 }
